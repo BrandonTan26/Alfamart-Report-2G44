@@ -4,454 +4,678 @@
   <meta charset="UTF-8" />
   <title>Laporan Per Shift - KP Garung Tambak</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
-    :root {
-      --bg-main: #050509;
-      --bg-card: #121219;
-      --bg-card-soft: #171720;
-      --text-main: #f5f5f5;
-      --text-muted: #aaaaaa;
-      --neon-red: #ff0033;
-      --neon-yellow: #ffd300;
-      --border-soft: #2a2a36;
-      --shadow-soft: 0 0 18px rgba(255, 0, 51, 0.25);
-      --shadow-yellow: 0 0 20px rgba(255, 211, 0, 0.35);
-      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  /* ===========================
+     NEON CYBER VARIABLES
+  ============================ */
+  :root {
+    --bg-main: #050509;
+    --bg-card: rgba(10, 10, 18, 0.94);
+    --bg-card-soft: rgba(18, 18, 30, 0.96);
+    --text-main: #fdfdfd;
+    --text-muted: #a7a7bf;
+    --neon-red: #ff0033;
+    --neon-yellow: #ffd300;
+    --border-soft: #2a2a3a;
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+
+  body.light {
+    --bg-main: #f4f4fb;
+    --bg-card: rgba(255, 255, 255, 0.98);
+    --bg-card-soft: #ffffff;
+    --text-main: #181820;
+    --text-muted: #66667c;
+    --border-soft: #e0e0ee;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* ===========================
+     GLOBAL BACKGROUND + MOTION
+  ============================ */
+  @keyframes bgShift {
+    0% {
+      background-position: 0% 0%;
     }
-
-    body.light {
-      --bg-main: #f7f7fb;
-      --bg-card: #ffffff;
-      --bg-card-soft: #ffffff;
-      --text-main: #181818;
-      --text-muted: #666666;
-      --border-soft: #e0e0ea;
-      --shadow-soft: 0 0 14px rgba(255, 0, 51, 0.15);
-      --shadow-yellow: 0 0 16px rgba(255, 211, 0, 0.25);
+    50% {
+      background-position: 50% 100%;
     }
-
-    * {
-      box-sizing: border-box;
+    100% {
+      background-position: 100% 0%;
     }
+  }
 
-    body {
-      margin: 0;
-      padding: 16px;
-      background: radial-gradient(circle at top left, rgba(255, 0, 51, 0.2), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.2), transparent 55%),
-                  var(--bg-main);
-      font-family: var(--font-main);
-      color: var(--text-main);
-      transition: background 0.3s ease, color 0.3s ease;
-    }
+  body {
+    margin: 0;
+    padding: 16px;
+    background:
+      radial-gradient(circle at top left, rgba(255, 0, 51, 0.32), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.26), transparent 55%),
+      linear-gradient(135deg, #050509, #070711, #050509);
+    background-size: 180% 180%;
+    animation: bgShift 26s infinite alternate ease-in-out;
+    font-family: var(--font-main);
+    color: var(--text-main);
+    transition: background 0.4s ease, color 0.3s ease;
+  }
 
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto 40px auto;
-    }
+  body.light {
+    background:
+      radial-gradient(circle at top left, rgba(255, 0, 51, 0.08), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.15), transparent 55%),
+      linear-gradient(135deg, #f4f4fb, #ffffff, #f2f2fb);
+  }
 
-    /* HEADER */
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto 40px auto;
+    position: relative;
+  }
 
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
+  .wrap::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px
+    );
+    background-size: 100% 3px;
+    opacity: 0.14;
+    mix-blend-mode: soft-light;
+  }
 
-    .brand-block {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
+  /* ===========================
+     HEADER
+  ============================ */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
 
-    .logo-alfamart {
-      padding: 8px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: radial-gradient(circle at top left, rgba(255, 0, 51, 0.45), transparent 60%),
-                  radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.45), transparent 60%),
-                  linear-gradient(135deg, #1c1c24, #050509);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .brand-block {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
 
-    .logo-alfamart span {
-      font-weight: 900;
-      letter-spacing: 0.13em;
-      font-size: 11px;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow:
-        0 0 6px rgba(255, 0, 51, 0.8),
-        0 0 12px rgba(255, 211, 0, 0.7);
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .brand-title {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-main);
-      text-shadow:
-        0 0 10px rgba(0, 0, 0, 0.7),
-        0 0 20px rgba(255, 0, 51, 0.7);
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-    }
-
-    .toggle-theme {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(5, 5, 10, 0.7);
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    body.light .toggle-theme {
-      background: rgba(255, 255, 255, 0.95);
-    }
-
-    .toggle-pill {
-      width: 40px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 20% 20%, var(--neon-yellow), transparent 70%),
-                  rgba(15, 15, 20, 1);
-      position: relative;
-      border: 1px solid rgba(255, 211, 0, 0.7);
-      box-shadow: var(--shadow-yellow);
-    }
-
-    .toggle-knob {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      background: #111;
-      position: absolute;
-      top: 1px;
-      left: 2px;
-      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 0 6px rgba(255, 211, 0, 0.9);
-    }
-
-    body.light .toggle-knob {
-      transform: translateX(20px);
-      background: #fff5c0;
-      box-shadow: 0 0 9px rgba(255, 211, 0, 0.9);
-    }
-
-    .divider-neon {
-      height: 2px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, transparent, var(--neon-red), var(--neon-yellow), transparent);
+  @keyframes logoPulse {
+    0%, 100% {
       box-shadow:
-        0 0 12px rgba(255, 0, 51, 0.7),
-        0 0 10px rgba(255, 211, 0, 0.7);
-      margin-bottom: 12px;
-      opacity: 0.9;
+        0 0 8px rgba(255, 0, 51, 0.9),
+        0 0 16px rgba(255, 211, 0, 0.7);
+      transform: translateY(0);
     }
-
-    /* CARDS & LAYOUT */
-
-    .card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.65));
-      border-radius: 16px;
-      padding: 14px 14px 12px 14px;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 0 18px rgba(0, 0, 0, 0.5);
-      margin-bottom: 12px;
-    }
-
-    body.light .card {
-      background: var(--bg-card);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .card-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-    }
-
-    .card-title strong {
-      color: var(--neon-yellow);
-    }
-
-    .badge-kpi {
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text-muted);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px 12px;
-    }
-
-    @media (max-width: 720px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 4px;
-      display: block;
-      color: var(--text-muted);
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="date"] {
-      width: 100%;
-      padding: 7px 9px;
-      border-radius: 10px;
-      border: 1px solid var(--border-soft);
-      background: rgba(5, 5, 10, 0.85);
-      color: var(--text-main);
-      font-size: 12px;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    body.light input[type="text"],
-    body.light input[type="number"],
-    body.light input[type="date"] {
-      background: #fafafa;
-    }
-
-    input[type="text"]:focus,
-    input[type="number"]:focus,
-    input[type="date"]:focus {
-      border-color: var(--neon-yellow);
-      box-shadow: 0 0 12px rgba(255, 211, 0, 0.5);
-    }
-
-    input[readonly] {
-      opacity: 0.7;
-      cursor: default;
-      background: rgba(40, 40, 50, 0.8);
-    }
-
-    body.light input[readonly] {
-      background: #f0f0f5;
-    }
-
-    .note {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    .kpi-row {
-      border-left: 3px solid var(--neon-red);
-      padding-left: 10px;
-    }
-
-    .kpi-row.yellow {
-      border-left-color: var(--neon-yellow);
-    }
-
-    .kpi-name {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: var(--neon-yellow);
-      text-shadow:
-        0 0 8px rgba(255, 211, 0, 0.9),
-        0 0 12px rgba(255, 0, 51, 0.7);
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      font-size: 12px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
-    }
-
-    button span.icon {
-      font-size: 13px;
-    }
-
-    button.btn-red {
-      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 60%),
-                  linear-gradient(135deg, #ff0033, #b80024);
-      color: #fff;
-      box-shadow: 0 0 16px rgba(255, 0, 51, 0.7);
-    }
-
-    button.btn-yellow {
-      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 60%),
-                  linear-gradient(135deg, #ffd300, #b79200);
-      color: #201400;
-      box-shadow: 0 0 16px rgba(255, 211, 0, 0.7);
-    }
-
-    button.btn-wa {
-      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 60%),
-                  linear-gradient(135deg, #00c96f, #008c48);
-      color: #f5fff9;
-      box-shadow: 0 0 16px rgba(0, 201, 111, 0.8);
-    }
-
-    button:hover {
+    50% {
+      box-shadow:
+        0 0 16px rgba(255, 0, 51, 1),
+        0 0 26px rgba(255, 211, 0, 0.95);
       transform: translateY(-1px);
-      box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
-      opacity: 0.96;
     }
+  }
 
-    button:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow: none;
-      opacity: 0.9;
-    }
+  .logo-alfamart {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.14), transparent 55%),
+      radial-gradient(circle at 0% 100%, rgba(255, 0, 51, 0.65), transparent 70%),
+      radial-gradient(circle at 100% 0%, rgba(255, 211, 0, 0.75), transparent 70%),
+      linear-gradient(135deg, #161620, #06060d);
+    animation: logoPulse 3s infinite ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    textarea {
-      width: 100%;
-      min-height: 260px;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-soft);
-      background:
-        linear-gradient(135deg, rgba(255, 0, 51, 0.05), transparent 70%),
-        radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.05), transparent 70%),
-        rgba(5, 5, 12, 0.96);
-      color: var(--text-main);
-      font-size: 12px;
-      font-family: var(--font-mono);
-      white-space: pre-wrap;
-      resize: vertical;
-      outline: none;
-    }
+  .logo-alfamart img.logo-img {
+    height: 22px;
+    display: block;
+  }
 
-    body.light textarea {
-      background:
-        linear-gradient(135deg, rgba(255, 0, 51, 0.02), transparent 70%),
-        radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.07), transparent 70%),
-        #fdfdfd;
-    }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
 
-    .footer {
-      margin-top: 22px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+  .brand-title {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-main);
+    text-shadow:
+      0 0 10px rgba(0, 0, 0, 0.9),
+      0 0 20px rgba(255, 0, 51, 0.7),
+      0 0 28px rgba(255, 211, 0, 0.5);
+  }
 
-    .footer-main {
-      margin-bottom: 3px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, var(--neon-yellow), var(--neon-red));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow:
-        0 0 10px rgba(255, 211, 0, 0.9),
-        0 0 16px rgba(255, 0, 51, 0.7);
-    }
+  .brand-sub {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+  }
 
-    .footer-sub {
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+  .toggle-theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 70%),
+                rgba(10, 10, 18, 0.9);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
 
-    .pill-status {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 10px;
-      font-size: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      margin-left: 4px;
-    }
+  body.light .toggle-theme {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
 
-    .pill-status.lunas {
-      border-color: rgba(0, 255, 128, 0.7);
-      color: #76ffb2;
-      box-shadow: 0 0 10px rgba(0, 255, 128, 0.6);
-    }
+  .toggle-pill {
+    width: 42px;
+    height: 18px;
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 20% 20%, var(--neon-yellow), transparent 70%),
+      rgba(10, 10, 20, 1);
+    position: relative;
+    border: 1px solid rgba(255, 211, 0, 0.7);
+    box-shadow:
+      0 0 10px rgba(255, 211, 0, 0.7),
+      0 0 16px rgba(255, 0, 51, 0.55);
+  }
 
-    .pill-status.hutang {
-      border-color: rgba(255, 0, 51, 0.7);
-      color: #ff9da9;
-      box-shadow: 0 0 8px rgba(255, 0, 51, 0.7);
-    }
+  .toggle-knob {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #111;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 6px rgba(255, 211, 0, 0.9);
+  }
 
-    .status-bar {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
+  body.light .toggle-knob {
+    transform: translateX(20px);
+    background: #fff5c0;
+    box-shadow: 0 0 9px rgba(255, 211, 0, 0.9);
+  }
 
-    .status-bar span.label {
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      font-size: 10px;
+  .mode-label {
+    white-space: nowrap;
+  }
+
+  .divider-neon {
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--neon-red), var(--neon-yellow), transparent);
+    box-shadow:
+      0 0 14px rgba(255, 0, 51, 0.8),
+      0 0 16px rgba(255, 211, 0, 0.8);
+    margin-bottom: 10px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===========================
+     SECTION NAV (PANDUAN / ISI / MOTIVASI)
+  ============================ */
+  .section-nav {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-chip {
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 60%),
+      rgba(12, 12, 22, 0.98);
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  }
+
+  .nav-chip span.icon {
+    font-size: 12px;
+  }
+
+  .nav-chip:hover {
+    color: #fff7d1;
+    box-shadow:
+      0 0 10px rgba(255, 211, 0, 0.6),
+      0 0 14px rgba(255, 0, 51, 0.4);
+    transform: translateY(-1px);
+  }
+
+  body.light .nav-chip {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .nav-chip.active {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.2), transparent 60%),
+      linear-gradient(135deg, #ff0033, #ffd300);
+    color: #1a0a0a;
+    box-shadow:
+      0 0 12px rgba(255, 0, 51, 0.7),
+      0 0 18px rgba(255, 211, 0, 0.8);
+  }
+
+  /* ===========================
+     CARD + GLASS + BORDER FLOW
+  ============================ */
+  @keyframes borderFlow {
+    0% {
+      border-image-source: linear-gradient(120deg, var(--neon-red), transparent, var(--neon-yellow));
     }
+    50% {
+      border-image-source: linear-gradient(240deg, var(--neon-yellow), transparent, var(--neon-red));
+    }
+    100% {
+      border-image-source: linear-gradient(420deg, var(--neon-red), transparent, var(--neon-yellow));
+    }
+  }
+
+  .card {
+    position: relative;
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 65%),
+      radial-gradient(circle at bottom right, rgba(255, 0, 51, 0.18), transparent 70%),
+      var(--bg-card);
+    border-radius: 18px;
+    padding: 14px 14px 12px 14px;
+    border: 1px solid var(--border-soft);
+    border-image-slice: 1;
+    border-image-source: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(42, 42, 58, 0.2));
+    animation: borderFlow 10s infinite linear;
+    box-shadow:
+      0 0 26px rgba(0, 0, 0, 0.8),
+      0 0 18px rgba(255, 0, 51, 0.25);
+    margin-bottom: 12px;
+    backdrop-filter: blur(18px);
+    z-index: 1;
+  }
+
+  body.light .card {
+    background:
+      radial-gradient(circle at top left, rgba(255, 0, 51, 0.04), transparent 65%),
+      radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.06), transparent 70%),
+      var(--bg-card-soft);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.20em;
+    color: var(--text-muted);
+  }
+
+  .card-title strong {
+    color: var(--neon-yellow);
+  }
+
+  .badge-kpi {
+    font-size: 10px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: var(--text-muted);
+    backdrop-filter: blur(10px);
+    background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 70%);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+  }
+
+  @media (max-width: 720px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 4px;
+    display: block;
+    color: var(--text-muted);
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    width: 100%;
+    padding: 7px 9px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: rgba(8, 8, 16, 0.95);
+    color: var(--text-main);
+    font-size: 12px;
+    outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.12s ease;
+  }
+
+  body.light input[type="text"],
+  body.light input[type="number"],
+  body.light input[type="date"] {
+    background: #fafafa;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus {
+    border-color: var(--neon-yellow);
+    box-shadow:
+      0 0 12px rgba(255, 211, 0, 0.6),
+      0 0 18px rgba(255, 0, 51, 0.4);
+    transform: translateY(-1px);
+  }
+
+  input[readonly] {
+    opacity: 0.7;
+    cursor: default;
+    background: rgba(28, 28, 40, 0.9);
+  }
+
+  body.light input[readonly] {
+    background: #f0f0f5;
+  }
+
+  .note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .kpi-row {
+    border-left: 3px solid var(--neon-red);
+    padding-left: 10px;
+  }
+
+  .kpi-row.yellow {
+    border-left-color: var(--neon-yellow);
+  }
+
+  .kpi-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--neon-yellow);
+    text-shadow:
+      0 0 8px rgba(255, 211, 0, 0.9),
+      0 0 12px rgba(255, 0, 51, 0.7);
+  }
+
+  /* ===========================
+     BUTTONS
+  ============================ */
+
+  @keyframes buttonPulse {
+    0%, 100% {
+      box-shadow: 0 0 16px rgba(255, 0, 51, 0.7);
+      transform: translateY(0);
+    }
+    50% {
+      box-shadow: 0 0 24px rgba(255, 211, 0, 0.9);
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  button {
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  button span.icon {
+    font-size: 13px;
+  }
+
+  button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.4),
+      transparent,
+      transparent
+    );
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  button:hover::before {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+
+  button.btn-red {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 60%),
+      linear-gradient(135deg, #ff0033, #b80024);
+    color: #fff;
+    animation: buttonPulse 3.6s infinite ease-in-out;
+  }
+
+  button.btn-yellow {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 60%),
+      linear-gradient(135deg, #ffd300, #b79200);
+    color: #201400;
+    box-shadow: 0 0 16px rgba(255, 211, 0, 0.7);
+  }
+
+  button.btn-wa {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 60%),
+      linear-gradient(135deg, #00c96f, #008c48);
+    color: #f5fff9;
+    box-shadow: 0 0 16px rgba(0, 201, 111, 0.8);
+  }
+
+  button:hover {
+    transform: translateY(-1px) scale(1.01);
+    opacity: 0.96;
+  }
+
+  button:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow: none;
+    opacity: 0.9;
+  }
+
+  /* ===========================
+     TEXTAREA OUTPUT
+  ============================ */
+
+  textarea {
+    width: 100%;
+    min-height: 260px;
+    padding: 10px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border-soft);
+    background:
+      linear-gradient(135deg, rgba(255, 0, 51, 0.08), transparent 70%),
+      radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.08), transparent 70%),
+      rgba(5, 5, 12, 0.96);
+    color: var(--text-main);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+    resize: vertical;
+    outline: none;
+  }
+
+  body.light textarea {
+    background:
+      linear-gradient(135deg, rgba(255, 0, 51, 0.02), transparent 70%),
+      radial-gradient(circle at bottom right, rgba(255, 211, 0, 0.07), transparent 70%),
+      #fdfdfd;
+  }
+
+  .status-bar {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .status-bar span.label {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10px;
+  }
+
+  .pill-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    font-size: 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    margin-left: 4px;
+  }
+
+  .pill-status.lunas {
+    border-color: rgba(0, 255, 128, 0.7);
+    color: #76ffb2;
+    box-shadow: 0 0 10px rgba(0, 255, 128, 0.6);
+  }
+
+  .pill-status.hutang {
+    border-color: rgba(255, 0, 51, 0.7);
+    color: #ff9da9;
+    box-shadow: 0 0 8px rgba(255, 0, 51, 0.7);
+  }
+
+  /* ===========================
+     FOOTER + MOTIVASI
+  ============================ */
+
+  .footer {
+    margin-top: 22px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-main {
+    margin-bottom: 3px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--neon-yellow), var(--neon-red));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 0 10px rgba(255, 211, 0, 0.9),
+      0 0 16px rgba(255, 0, 51, 0.7);
+  }
+
+  .footer-sub {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .motivation-list {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin: 4px 0 2px 0;
+    padding-left: 18px;
+  }
+
+  .motivation-list li {
+    margin-bottom: 3px;
+  }
+
+  .motivation-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 6px;
+    color: var(--neon-yellow);
+  }
   </style>
 </head>
 <body class="dark">
@@ -460,7 +684,7 @@
     <div class="header">
       <div class="brand-block">
         <div class="logo-alfamart">
-          <span>ALFAMART</span>
+          <img src="alfamart-logo.png" alt="Alfamart" class="logo-img" />
         </div>
         <div class="brand-text">
           <div class="brand-title">KP GARUNG TAMBAK</div>
@@ -478,8 +702,48 @@
 
     <div class="divider-neon"></div>
 
+    <!-- SECTION NAV -->
+    <div class="section-nav">
+      <button type="button" class="nav-chip active" onclick="scrollToSection('section-panduan')">
+        <span class="icon">📘</span>
+        <span>Panduan</span>
+      </button>
+      <button type="button" class="nav-chip" onclick="scrollToSection('section-isi-laporan')">
+        <span class="icon">🧾</span>
+        <span>Isi Laporan</span>
+      </button>
+      <button type="button" class="nav-chip" onclick="scrollToSection('section-motivasi')">
+        <span class="icon">⭐</span>
+        <span>Motivasi</span>
+      </button>
+    </div>
+
+    <!-- PANDUAN -->
+    <div class="card" id="section-panduan">
+      <div class="card-header">
+        <div class="card-title"><strong>Panduan</strong> · Cara Pakai Template Ini</div>
+        <span class="badge-kpi">Guide</span>
+      </div>
+      <div>
+        <p style="font-size:12px; margin:0 0 6px 0; font-weight:600;">Versi sopan & jelas untuk kasir</p>
+        <ol style="margin:0 0 8px 16px; padding:0; font-size:12px; color:var(--text-main);">
+          <li>Isi <strong>Tanggal, Nama Kasir, AC, dan Shift</strong>.</li>
+          <li>Isi <strong>ACTUAL</strong> pada setiap KPI sesuai pencapaian shift Anda.</li>
+          <li>Klik <strong>Generate Laporan</strong>.</li>
+          <li>Periksa hasil laporan di kotak bawah.</li>
+          <li>Klik <strong>Copy Laporan</strong>.</li>
+          <li>Klik <strong>Kirim ke Grup WA</strong>, lalu <strong>paste</strong> laporan di grup.</li>
+          <li>Jika ada kesalahan angka, ubah ACTUAL → klik <strong>Generate</strong> kembali.</li>
+        </ol>
+        <p class="note">
+          Kolom <strong>HUTANG</strong> dan <strong>ACV%</strong> otomatis terisi. Target tidak perlu diubah.
+          Hanya isi ACTUAL untuk shift yang sedang Anda jalankan.
+        </p>
+      </div>
+    </div>
+
     <!-- DATA UMUM -->
-    <div class="card">
+    <div class="card" id="section-isi-laporan">
       <div class="card-header">
         <div class="card-title"><strong>Input Laporan</strong> · Data Umum Shift</div>
         <span class="badge-kpi">KP GARUNG TAMBAK</span>
@@ -511,8 +775,8 @@
         </div>
       </div>
       <p class="note">
-        Catatan: Target KPI di bawah <strong>fix</strong> dari toko. Anak-anak cukup isi
-        <strong>ACTUAL</strong> dan data umum saja. ACV & status hutang akan dihitung otomatis.
+        Target KPI di bawah <strong>fix</strong>. Kasir cukup isi <strong>ACTUAL</strong> dan data umum.
+        ACV & HUTANG (±) dihitung otomatis per shift.
       </p>
     </div>
 
@@ -534,8 +798,8 @@
             <input type="number" id="psmTarget2" value="25" readonly />
           </div>
           <div>
-            <label>ACTUAL (total sehari)</label>
-            <input type="number" id="psmActual" placeholder="Isi total PSM" />
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" id="psmActual" placeholder="Isi PSM shift ini" />
           </div>
         </div>
       </div>
@@ -559,8 +823,8 @@
             <input type="number" id="pwpTarget2" value="15" readonly />
           </div>
           <div>
-            <label>ACTUAL (total sehari)</label>
-            <input type="number" id="pwpActual" placeholder="Isi total PWP" />
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" id="pwpActual" placeholder="Isi PWP shift ini" />
           </div>
         </div>
       </div>
@@ -584,8 +848,8 @@
             <input type="number" id="sertisTarget2" value="12" readonly />
           </div>
           <div>
-            <label>ACTUAL (total sehari)</label>
-            <input type="number" id="sertisActual" placeholder="Isi total Sertis" />
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" id="sertisActual" placeholder="Isi Sertis shift ini" />
           </div>
         </div>
       </div>
@@ -606,7 +870,7 @@
           </div>
           <div>
             <label>Struk Bersyarat</label>
-            <input type="number" id="suegerBersyarat" placeholder="Struk memenuhi syarat" />
+            <input type="number" id="suegerBersyarat" placeholder="Struk memenuhi syarat (shift ini / total)" />
           </div>
           <div>
             <label>Struk Redeem</label>
@@ -630,12 +894,12 @@
             <input type="number" id="evoucherTargetShift" value="5000" readonly />
           </div>
           <div>
-            <label>ACTUAL (total sehari, Rp)</label>
-            <input type="number" id="evoucherActual" placeholder="Total rupiah evoucher" />
+            <label>ACTUAL (shift yang jaga, Rp)</label>
+            <input type="number" id="evoucherActual" placeholder="Total rupiah evoucher shift ini" />
           </div>
         </div>
         <p class="note">
-          Target total = Target per shift × 2 shift.
+          Target dan hutang dihitung per shift sesuai yang jaga.
         </p>
       </div>
     </div>
@@ -658,8 +922,8 @@
             <input type="number" id="nmTarget2" value="1" readonly />
           </div>
           <div>
-            <label>ACTUAL (total sehari)</label>
-            <input type="number" id="nmActual" placeholder="Isi total NM" />
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" id="nmActual" placeholder="Isi NM shift ini" />
           </div>
         </div>
       </div>
@@ -679,8 +943,8 @@
             <input type="number" id="telurTargetShift" value="1" readonly />
           </div>
           <div>
-            <label>ACTUAL (total pack sehari)</label>
-            <input type="number" id="telurActual" placeholder="Total pack telur" />
+            <label>ACTUAL (shift yang jaga, pack)</label>
+            <input type="number" id="telurActual" placeholder="Total pack telur shift ini" />
           </div>
         </div>
       </div>
@@ -715,9 +979,29 @@
 
       <textarea id="output" placeholder="Klik 'Generate Laporan' dulu, lalu copy dan paste di grup WA..."></textarea>
       <p class="note">
-        Flow kerja: isi data → klik <strong>Generate Laporan</strong> → klik <strong>Copy</strong> →
-        klik <strong>Kirim ke Grup WA</strong> → paste di kolom chat.
+        Flow: isi data → klik <strong>Generate</strong> → <strong>Copy</strong> → <strong>Kirim ke Grup WA</strong> → paste di chat.
       </p>
+    </div>
+
+    <!-- MOTIVASI -->
+    <div class="card" id="section-motivasi">
+      <div class="card-header">
+        <div class="card-title"><strong>Motivasi</strong> · Versi Pendek & Ngena</div>
+        <span class="badge-kpi">Untuk Kasir</span>
+      </div>
+      <div>
+        <p class="motivation-title">Motivasi Shift</p>
+        <ul class="motivation-list">
+          <li>“Kerja Anda hari ini menentukan hasil toko besok.”</li>
+          <li>“Target bukan tekanan, tapi arah.”</li>
+          <li>“Pelayanan kecil Anda punya dampak besar.”</li>
+          <li>“Setiap shift adalah kesempatan memperbaiki.”</li>
+          <li>“Kerja hebat lahir dari konsistensi sederhana.”</li>
+          <li>“Senyum Anda adalah branding toko.”</li>
+          <li>“Yang penting bukan cepat, tapi tepat.”</li>
+          <li>“Capek itu wajar, menyerah itu tidak.”</li>
+        </ul>
+      </div>
     </div>
 
     <!-- FOOTER -->
@@ -728,128 +1012,164 @@
   </div>
 
   <script>
-    // THEME TOGGLE
-    (function initTheme() {
-      const body = document.body;
-      const toggle = document.getElementById("themeToggle");
-      const label = toggle.querySelector(".mode-label");
+  // THEME TOGGLE
+  (function initTheme() {
+    const body = document.body;
+    const toggle = document.getElementById("themeToggle");
+    const label = toggle.querySelector(".mode-label");
 
-      function applyTheme(mode) {
-        if (mode === "light") {
-          body.classList.remove("dark");
-          body.classList.add("light");
-          label.textContent = "Light Mode";
-        } else {
-          body.classList.remove("light");
-          body.classList.add("dark");
-          label.textContent = "Dark Mode";
-        }
-      }
-
-      const saved = localStorage.getItem("reportTheme");
-      if (saved === "light" || saved === "dark") {
-        applyTheme(saved);
+    function applyTheme(mode) {
+      if (mode === "light") {
+        body.classList.remove("dark");
+        body.classList.add("light");
+        label.textContent = "Light Mode";
       } else {
-        applyTheme("dark");
+        body.classList.remove("light");
+        body.classList.add("dark");
+        label.textContent = "Dark Mode";
       }
-
-      toggle.addEventListener("click", () => {
-        const cur = body.classList.contains("light") ? "light" : "dark";
-        const next = cur === "light" ? "dark" : "light";
-        applyTheme(next);
-        localStorage.setItem("reportTheme", next);
-      });
-    })();
-
-    function formatTanggalId(value) {
-      if (!value) return "";
-      const parts = value.split("-");
-      if (parts.length !== 3) return value;
-      return parts[2] + "-" + parts[1] + "-" + parts[0];
     }
 
-    function hitungKpi(target1, target2, actual) {
-      const t1 = Number(target1) || 0;
-      const t2 = Number(target2) || 0;
-      const act = Number(actual) || 0;
-      const targetTotal = t1 + t2;
-      let acv = 0;
-      if (targetTotal > 0) {
-        acv = (act / targetTotal) * 100;
-      }
-      const acvRounded = Math.round(acv);
-      const hutang = acvRounded >= 100 ? "lunas" : "hutang";
-      return { t1, t2, act, acvRounded, hutang, targetTotal };
+    const saved = localStorage.getItem("reportTheme");
+    if (saved === "light" || saved === "dark") {
+      applyTheme(saved);
+    } else {
+      applyTheme("dark");
     }
 
-    function generateLaporan() {
-      const namaToko = document.getElementById("namaToko").value || "";
-      const tanggalRaw = document.getElementById("tanggal").value || "";
-      const tanggal = formatTanggalId(tanggalRaw);
-      const cos = document.getElementById("cos").value || "";
-      const namaKasir = document.getElementById("namaKasir").value || "";
-      const ac = document.getElementById("ac").value || "";
-      const shift = document.getElementById("shift").value || "";
+    toggle.addEventListener("click", () => {
+      const cur = body.classList.contains("light") ? "light" : "dark";
+      const next = cur === "light" ? "dark" : "light";
+      applyTheme(next);
+      localStorage.setItem("reportTheme", next);
+    });
+  })();
 
-      // PSM
-      const psm = hitungKpi(
-        document.getElementById("psmTarget1").value,
-        document.getElementById("psmTarget2").value,
-        document.getElementById("psmActual").value
-      );
+  // SECTION NAV SCROLL
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      // PWP
-      const pwp = hitungKpi(
-        document.getElementById("pwpTarget1").value,
-        document.getElementById("pwpTarget2").value,
-        document.getElementById("pwpActual").value
-      );
+    const chips = document.querySelectorAll(".nav-chip");
+    chips.forEach(ch => ch.classList.remove("active"));
 
-      // SERTIS
-      const sertis = hitungKpi(
-        document.getElementById("sertisTarget1").value,
-        document.getElementById("sertisTarget2").value,
-        document.getElementById("sertisActual").value
-      );
+    if (id === "section-panduan") {
+      chips[0]?.classList.add("active");
+    } else if (id === "section-isi-laporan") {
+      chips[1]?.classList.add("active");
+    } else if (id === "section-motivasi") {
+      chips[2]?.classList.add("active");
+    }
+  }
 
-      // PROMO SUEGER
-      const suegerTargetPct = Number(document.getElementById("suegerTargetPct").value) || 0;
-      const suegerBersyarat = Number(document.getElementById("suegerBersyarat").value) || 0;
-      const suegerRedeem = Number(document.getElementById("suegerRedeem").value) || 0;
-      let suegerAcv = 0;
-      if (suegerBersyarat > 0) {
-        suegerAcv = (suegerRedeem / suegerBersyarat) * 100;
-      }
-      const suegerAcvRounded = Math.round(suegerAcv);
+  function formatTanggalId(value) {
+    if (!value) return "";
+    const parts = value.split("-");
+    if (parts.length !== 3) return value;
+    return parts[2] + "-" + parts[1] + "-" + parts[0]; // dd-mm-yyyy
+  }
 
-      // EVOUCHER
-      const evTargetShift = Number(document.getElementById("evoucherTargetShift").value) || 0;
-      const evActual = Number(document.getElementById("evoucherActual").value) || 0;
-      const evTargetTotal = evTargetShift * 2;
-      let evAcv = 0;
-      if (evTargetTotal > 0) {
-        evAcv = (evActual / evTargetTotal) * 100;
-      }
-      const evAcvRounded = Math.round(evAcv);
+  // HITUNG KPI PER SHIFT
+  function hitungKpiPerShift(target1, target2, actual, shift) {
+    const t1 = Number(target1) || 0;
+    const t2 = Number(target2) || 0;
+    const act = Number(actual) || 0;
+    const sh = Number(shift) || 0;
 
-      // NEW MEMBER
-      const nm = hitungKpi(
-        document.getElementById("nmTarget1").value,
-        document.getElementById("nmTarget2").value,
-        document.getElementById("nmActual").value
-      );
+    let target = 0;
+    if (sh === 1) target = t1;
+    else if (sh === 2) target = t2;
+    else target = t1 + t2;
 
-      // TELUR
-      const telurTargetShift = Number(document.getElementById("telurTargetShift").value) || 0;
-      const telurActual = Number(document.getElementById("telurActual").value) || 0;
-      const telurTargetTotal = telurTargetShift * 2;
-      let telurAcv = 0;
-      if (telurTargetTotal > 0) {
-        telurAcv = (telurActual / telurTargetTotal) * 100;
-      }
-      const telurAcvRounded = Math.round(telurAcv);
+    let acv = 0;
+    if (target > 0) acv = (act / target) * 100;
+    const acvRounded = Math.round(acv);
 
-      const laporan =
+    const hutangNum = act - target;
+
+    return { t1, t2, act, target, acvRounded, hutangNum };
+  }
+
+  function generateLaporan() {
+    const namaToko = document.getElementById("namaToko").value || "";
+    const tanggalRaw = document.getElementById("tanggal").value || "";
+    const tanggal = formatTanggalId(tanggalRaw);
+    const cos = document.getElementById("cos").value || "";
+    const namaKasir = document.getElementById("namaKasir").value || "";
+    const ac = document.getElementById("ac").value || "";
+    const shift = document.getElementById("shift").value || "";
+    const shNum = Number(shift) || 0;
+
+    // PSM
+    const psm = hitungKpiPerShift(
+      document.getElementById("psmTarget1").value,
+      document.getElementById("psmTarget2").value,
+      document.getElementById("psmActual").value,
+      shNum
+    );
+
+    // PWP
+    const pwp = hitungKpiPerShift(
+      document.getElementById("pwpTarget1").value,
+      document.getElementById("pwpTarget2").value,
+      document.getElementById("pwpActual").value,
+      shNum
+    );
+
+    // SERTIS
+    const sertis = hitungKpiPerShift(
+      document.getElementById("sertisTarget1").value,
+      document.getElementById("sertisTarget2").value,
+      document.getElementById("sertisActual").value,
+      shNum
+    );
+
+    // PROMO SUEGER
+    const suegerTargetPct = Number(document.getElementById("suegerTargetPct").value) || 0;
+    const suegerBersyarat = Number(document.getElementById("suegerBersyarat").value) || 0;
+    const suegerRedeem = Number(document.getElementById("suegerRedeem").value) || 0;
+    let suegerAcv = 0;
+    if (suegerBersyarat > 0) {
+      suegerAcv = (suegerRedeem / suegerBersyarat) * 100;
+    }
+    const suegerAcvRounded = Math.round(suegerAcv);
+
+    // EVOUCHER
+    const evTargetShift = Number(document.getElementById("evoucherTargetShift").value) || 0;
+    const evActual = Number(document.getElementById("evoucherActual").value) || 0;
+    let evAcv = 0;
+    if (evTargetShift > 0) {
+      evAcv = (evActual / evTargetShift) * 100;
+    }
+    const evAcvRounded = Math.round(evAcv);
+    const evHutangNum = evActual - evTargetShift;
+
+    // NEW MEMBER
+    const nm = hitungKpiPerShift(
+      document.getElementById("nmTarget1").value,
+      document.getElementById("nmTarget2").value,
+      document.getElementById("nmActual").value,
+      shNum
+    );
+
+    // TELUR
+    const telurTargetShift = Number(document.getElementById("telurTargetShift").value) || 0;
+    const telurActual = Number(document.getElementById("telurActual").value) || 0;
+    let telurAcv = 0;
+    if (telurTargetShift > 0) {
+      telurAcv = (telurActual / telurTargetShift) * 100;
+    }
+    const telurAcvRounded = Math.round(telurAcv);
+    const telurHutangNum = telurActual - telurTargetShift;
+
+    function formatHutang(num) {
+      if (num > 0) return "+" + num;
+      if (num < 0) return String(num);
+      return "0";
+    }
+
+    const laporan =
 `LAPORAN PERSHIFT
 NAMA TOKO  : ${namaToko}
 TANGGAL    : ${tanggal}
@@ -859,25 +1179,22 @@ AC         : ${ac}
 SHIFT      : ${shift}
 
 *PSM*
-TARGET SHIFT 1 : ${psm.t1}
-TARGET SHIFT 2 : ${psm.t2}
-ACTUAL        : ${psm.act}
-HUTANG        : ${psm.hutang}
-ACV           : ${psm.acvRounded}%
+TARGET : ${psm.target}
+ACTUAL : ${psm.act}
+HUTANG : ${formatHutang(psm.hutangNum)}
+ACV    : ${psm.acvRounded}%
 
 *PWP*
-TARGET SHIFT 1 : ${pwp.t1}
-TARGET SHIFT 2 : ${pwp.t2}
-ACTUAL        : ${pwp.act}
-HUTANG        : ${pwp.hutang}
-ACV           : ${pwp.acvRounded}%
+TARGET : ${pwp.target}
+ACTUAL : ${pwp.act}
+HUTANG : ${formatHutang(pwp.hutangNum)}
+ACV    : ${pwp.acvRounded}%
 
 *SERTIS*
-TARGET SHIFT 1 : ${sertis.t1}
-TARGET SHIFT 2 : ${sertis.t2}
-ACTUAL        : ${sertis.act}
-HUTANG        : ${sertis.hutang}
-ACV           : ${sertis.acvRounded}%
+TARGET : ${sertis.target}
+ACTUAL : ${sertis.act}
+HUTANG : ${formatHutang(sertis.hutangNum)}
+ACV    : ${sertis.acvRounded}%
 
 *PROMO SUEGER*
 TARGET ${suegerTargetPct}% TO SYARAT
@@ -888,75 +1205,74 @@ ACV%            : ${suegerAcvRounded}%
 *EVOUCHER*
 TARGET : Rp ${evTargetShift.toLocaleString("id-ID")} /SHIFT
 ACTUAL : Rp ${evActual.toLocaleString("id-ID")}
+HUTANG : ${formatHutang(evHutangNum)}
 ACV    : ${evAcvRounded}%
 
 *NEW MEMBER*
-TARGET SHIFT 1 : ${nm.t1}
-TARGET SHIFT 2 : ${nm.t2}
-ACTUAL         : ${nm.act}
-HUTANG         : ${nm.hutang}
-ACV%           : ${nm.acvRounded}%
+TARGET : ${nm.target}
+ACTUAL : ${nm.act}
+HUTANG : ${formatHutang(nm.hutangNum)}
+ACV%   : ${nm.acvRounded}%
 
 *TELUR AYAM NEGERI*
 TARGET : ${telurTargetShift} PACK/SHIFT
 ACTUAL : ${telurActual}
+HUTANG : ${formatHutang(telurHutangNum)}
 ACV%   : ${telurAcvRounded}%`;
 
-      document.getElementById("output").value = laporan;
+    document.getElementById("output").value = laporan;
 
-      // Ringkasan status KPI di atas
-      const statusSummary = document.getElementById("statusSummary");
-      const statusPieces = [];
+    const statusSummary = document.getElementById("statusSummary");
+    const statusPieces = [];
 
-      function pill(text, ok) {
-        const cls = ok ? "pill-status lunas" : "pill-status hutang";
-        return `<span class="${cls}">${text}</span>`;
-      }
-
-      statusPieces.push('<span class="label">Status KPI</span> · ');
-
-      statusPieces.push("PSM ");
-      statusPieces.push(pill(psm.hutang.toUpperCase(), psm.hutang === "lunas"));
-      statusPieces.push(" · PWP ");
-      statusPieces.push(pill(pwp.hutang.toUpperCase(), pwp.hutang === "lunas"));
-      statusPieces.push(" · SERTIS ");
-      statusPieces.push(pill(sertis.hutang.toUpperCase(), sertis.hutang === "lunas"));
-      statusPieces.push(" · NM ");
-      statusPieces.push(pill(nm.hutang.toUpperCase(), nm.hutang === "lunas"));
-
-      statusSummary.innerHTML = statusPieces.join("");
+    function pill(text, ok) {
+      const cls = ok ? "pill-status lunas" : "pill-status hutang";
+      return `<span class="${cls}">${text}</span>`;
     }
 
-    async function copyLaporan() {
-      const textarea = document.getElementById("output");
-      const text = textarea.value || "";
-      if (!text.trim()) {
-        alert("Belum ada laporan. Klik GENERATE dulu.");
-        return;
-      }
+    statusPieces.push('<span class="label">Status KPI</span> · ');
+    statusPieces.push("PSM ");
+    statusPieces.push(pill(formatHutang(psm.hutangNum), psm.hutangNum >= 0));
+    statusPieces.push(" · PWP ");
+    statusPieces.push(pill(formatHutang(pwp.hutangNum), pwp.hutangNum >= 0));
+    statusPieces.push(" · SERTIS ");
+    statusPieces.push(pill(formatHutang(sertis.hutangNum), sertis.hutangNum >= 0));
+    statusPieces.push(" · NM ");
+    statusPieces.push(pill(formatHutang(nm.hutangNum), nm.hutangNum >= 0));
 
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          textarea.select();
-          textarea.setSelectionRange(0, 99999);
-          document.execCommand("copy");
-        }
-        alert("Laporan sudah di-copy. Tinggal paste di WA.");
-      } catch (e) {
-        console.error(e);
+    statusSummary.innerHTML = statusPieces.join("");
+  }
+
+  async function copyLaporan() {
+    const textarea = document.getElementById("output");
+    const text = textarea.value || "";
+    if (!text.trim()) {
+      alert("Belum ada laporan. Klik GENERATE dulu.");
+      return;
+    }
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
         textarea.select();
         textarea.setSelectionRange(0, 99999);
         document.execCommand("copy");
-        alert("Clipboard tidak mendukung penuh. Laporan sudah diseleksi, silakan copy manual.");
       }
+      alert("Laporan sudah di-copy. Tinggal paste di WA.");
+    } catch (e) {
+      console.error(e);
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Clipboard tidak mendukung penuh. Laporan sudah diseleksi, silakan copy manual.");
     }
+  }
 
-    function openWhatsAppGroup() {
-      const url = "https://chat.whatsapp.com/IQcVASSrOnwLsqWKSP4agt?mode=hqrc";
-      window.open(url, "_blank");
-    }
+  function openWhatsAppGroup() {
+    const url = "https://chat.whatsapp.com/IQcVASSrOnwLsqWKSP4agt?mode=hqrc";
+    window.open(url, "_blank");
+  }
   </script>
 </body>
 </html>
