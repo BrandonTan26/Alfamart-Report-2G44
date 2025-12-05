@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Laporan Per Shift · DEMO VIEW ONLY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+  /* ===========================
+     THEME & COLORS (ANGKASA BLUE–VIOLET)
+  ============================ */
+  :root {
+    --bg-main: #050718;
+    --bg-card: rgba(10, 12, 32, 0.98);
+    --bg-card-soft: rgba(18, 22, 52, 0.98);
+    --text-main: #f8f8ff;
+    --text-muted: #a6add8;
+    --neon-primary: #4f8cff;
+    --neon-secondary: #a855ff;
+    --border-soft: #262b4a;
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+
+  body.light {
+    --bg-main: #eef1ff;
+    --bg-card: #ffffff;
+    --bg-card-soft: #ffffff;
+    --text-main: #141621;
+    --text-muted: #6a6f90;
+    --border-soft: #d9ddf4;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* ===========================
+     GLOBAL BACKGROUND (NO ANIM)
+  ============================ */
+  body {
+    margin: 0;
+    padding: 16px;
+    background:
+      radial-gradient(circle at top left, rgba(79, 140, 255, 0.35), transparent 55%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 255, 0.28), transparent 60%),
+      radial-gradient(circle at center, #050718, #050210);
+    font-family: var(--font-main);
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  body.light {
+    background:
+      radial-gradient(circle at top left, rgba(79, 140, 255, 0.14), transparent 55%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 255, 0.16), transparent 60%),
+      linear-gradient(135deg, #eef1ff, #ffffff);
+  }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto 40px auto;
+    position: relative;
+  }
+
+  .wrap::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    );
+    background-size: 100% 3px;
+    opacity: 0.10;
+    mix-blend-mode: soft-light;
+  }
+
+  /* ===========================
+     HEADER
+  ============================ */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand-block {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .logo-alfamart {
+    padding: 6px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
+      linear-gradient(135deg, #111632, #050718);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-alfamart img.logo-img {
+    height: 30px;
+    display: block;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .brand-title {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-main);
+    text-shadow:
+      0 0 10px rgba(0, 0, 0, 0.6),
+      0 0 16px rgba(79, 140, 255, 0.55);
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+  }
+
+  .toggle-theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    background: rgba(11, 14, 40, 0.95);
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  body.light .toggle-theme {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .toggle-pill {
+    width: 42px;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .toggle-knob {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #050713;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  body.light .toggle-knob {
+    transform: translateX(20px);
+    background: #fdfcff;
+  }
+
+  .mode-label {
+    white-space: nowrap;
+  }
+
+  .divider-neon {
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--neon-primary), var(--neon-secondary), transparent);
+    box-shadow:
+      0 0 14px rgba(79, 140, 255, 0.55),
+      0 0 14px rgba(168, 85, 255, 0.55);
+    margin-bottom: 10px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===========================
+     SECTION NAV
+  ============================ */
+  .section-nav {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-chip {
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: rgba(12, 15, 44, 0.96);
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  }
+
+  .nav-chip span.icon {
+    font-size: 12px;
+  }
+
+  .nav-chip:hover {
+    color: #fefeff;
+    box-shadow: 0 0 10px rgba(79, 140, 255, 0.6);
+    transform: translateY(-1px);
+  }
+
+  body.light .nav-chip {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .nav-chip.active {
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+    color: #060717;
+    box-shadow:
+      0 0 12px rgba(79, 140, 255, 0.7),
+      0 0 12px rgba(168, 85, 255, 0.7);
+  }
+
+  /* ===========================
+     CARD
+  ============================ */
+  .card {
+    position: relative;
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(79, 140, 255, 0.16), transparent 70%),
+      var(--bg-card);
+    border-radius: 18px;
+    padding: 14px 14px 12px 14px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    margin-bottom: 12px;
+    z-index: 1;
+  }
+
+  body.light .card {
+    background:
+      radial-gradient(circle at top left, rgba(79, 140, 255, 0.04), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 255, 0.05), transparent 70%),
+      var(--bg-card-soft);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.20em;
+    color: var(--text-muted);
+  }
+
+  .card-title strong {
+    color: var(--neon-primary);
+  }
+
+  .badge-kpi {
+    font-size: 10px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--text-muted);
+    background: rgba(12, 15, 44, 0.9);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+  }
+
+  @media (max-width: 720px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 4px;
+    display: block;
+    color: var(--text-muted);
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    width: 100%;
+    padding: 7px 9px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: rgba(8, 10, 30, 0.96);
+    color: var(--text-main);
+    font-size: 12px;
+    outline: none;
+  }
+
+  body.light input[type="text"],
+  body.light input[type="number"],
+  body.light input[type="date"] {
+    background: #f8f8ff;
+  }
+
+  input[readonly],
+  input[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(18, 20, 42, 0.98);
+  }
+
+  body.light input[readonly],
+  body.light input[disabled] {
+    background: #eef0ff;
+  }
+
+  .note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .kpi-row {
+    border-left: 3px solid var(--neon-primary);
+    padding-left: 10px;
+  }
+
+  .kpi-row.yellow {
+    border-left-color: var(--neon-secondary);
+  }
+
+  .kpi-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--neon-primary);
+  }
+
+  /* ===========================
+     BUTTONS (DEMO DISABLED)
+  ============================ */
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  button {
+    border: none;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  button span.icon {
+    font-size: 13px;
+  }
+
+  button.btn-red {
+    background: linear-gradient(135deg, #4f8cff, #2b5fbf);
+    color: #fdfdff;
+  }
+
+  button.btn-yellow {
+    background: linear-gradient(135deg, #a855ff, #6d28d9);
+    color: #fdfdff;
+  }
+
+  button.btn-wa {
+    background: linear-gradient(135deg, #00c96f, #008c48);
+    color: #f5fff9;
+  }
+
+  .demo-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* ===========================
+     TEXTAREA OUTPUT
+  ============================ */
+  textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 10px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border-soft);
+    background:
+      radial-gradient(circle at top left, rgba(79, 140, 255, 0.12), transparent 70%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 255, 0.10), transparent 70%),
+      rgba(6, 8, 28, 0.98);
+    color: var(--text-main);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+    resize: none;
+    outline: none;
+  }
+
+  body.light textarea {
+    background:
+      radial-gradient(circle at top left, rgba(79, 140, 255, 0.06), transparent 70%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 255, 0.05), transparent 70%),
+      #fdfdff;
+  }
+
+  textarea[readonly] {
+    opacity: 0.9;
+    cursor: default;
+  }
+
+  .status-bar {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .status-bar span.label {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10px;
+  }
+
+  /* ===========================
+     FOOTER + MOTIVASI
+  ============================ */
+  .footer {
+    margin-top: 22px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-main {
+    margin-bottom: 3px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 0 10px rgba(79, 140, 255, 0.7),
+      0 0 10px rgba(168, 85, 255, 0.7);
+  }
+
+  .footer-sub {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .motivation-list {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin: 4px 0 2px 0;
+    padding-left: 18px;
+  }
+
+  .motivation-list li {
+    margin-bottom: 3px;
+  }
+
+  .motivation-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 6px;
+    color: var(--neon-primary);
+  }
+  </style>
+</head>
+<body class="dark">
+  <div class="wrap">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="brand-block">
+        <div class="logo-alfamart">
+          <img src="alfamart-logo.png" alt="Alfamart" class="logo-img" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">ALFAMART TOKO CONTOH</div>
+          <div class="brand-sub">Demo Template · View Only</div>
+        </div>
+      </div>
+
+      <button class="toggle-theme" id="themeToggle" type="button">
+        <div class="toggle-pill">
+          <div class="toggle-knob"></div>
+        </div>
+        <span class="mode-label">Dark Mode</span>
+      </button>
+    </div>
+
+    <div class="divider-neon"></div>
+
+    <!-- SECTION NAV -->
+    <div class="section-nav">
+      <button type="button" class="nav-chip active" onclick="scrollToSection('section-panduan')">
+        <span class="icon">📘</span>
+        <span>Panduan</span>
+      </button>
+      <button type="button" class="nav-chip" onclick="scrollToSection('section-isi-laporan')">
+        <span class="icon">🧾</span>
+        <span>Isi Laporan</span>
+      </button>
+      <button type="button" class="nav-chip" onclick="scrollToSection('section-motivasi')">
+        <span class="icon">⭐</span>
+        <span>Motivasi</span>
+      </button>
+    </div>
+
+    <!-- PANDUAN -->
+    <div class="card" id="section-panduan">
+      <div class="card-header">
+        <div class="card-title"><strong>Panduan</strong> · Cara Pakai Template Ini</div>
+        <span class="badge-kpi">Demo View</span>
+      </div>
+      <div>
+        <p style="font-size:12px; margin:0 0 6px 0; font-weight:600;">Versi demo · Tampilan saja (tidak dapat digunakan)</p>
+        <ol style="margin:0 0 8px 16px; padding:0; font-size:12px; color:var(--text-main);">
+          <li>Versi ini hanya menampilkan <strong>contoh tampilan template laporan per shift</strong>.</li>
+          <li>Semua kolom input dan tombol aksi <strong>dinonaktifkan</strong> di mode demo.</li>
+          <li>Untuk versi penuh (bisa isi, generate, dan kirim laporan WA) gunakan <strong>versi Premium</strong>.</li>
+        </ol>
+        <p class="note">
+          Toggle <strong>Dark / Light Mode</strong> tetap dapat digunakan agar tampilan bisa dicoba dalam dua mode.
+        </p>
+      </div>
+    </div>
+
+    <!-- DATA UMUM (VIEW ONLY) -->
+    <div class="card" id="section-isi-laporan">
+      <div class="card-header">
+        <div class="card-title"><strong>Input Laporan</strong> · Data Umum Shift (Demo)</div>
+        <span class="badge-kpi">View Only</span>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label>Nama Toko</label>
+          <input type="text" value="ALFAMART TOKO CONTOH" disabled />
+        </div>
+        <div>
+          <label>Tanggal</label>
+          <input type="date" value="2025-12-05" disabled />
+        </div>
+        <div>
+          <label>COS</label>
+          <input type="text" value="COS CONTOH" disabled />
+        </div>
+        <div>
+          <label>Nama Kasir</label>
+          <input type="text" value="KASIR DEMO" disabled />
+        </div>
+        <div>
+          <label>AC</label>
+          <input type="text" value="AC DEMO" disabled />
+        </div>
+        <div>
+          <label>Shift</label>
+          <input type="number" value="1" disabled />
+        </div>
+      </div>
+      <p class="note">
+        Angka di atas hanya contoh. Pada versi Premium, kasir dapat mengisi sendiri sesuai data shift mereka.
+      </p>
+    </div>
+
+    <!-- PSM (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>PSM</strong> (Demo)</div>
+        <span class="badge-kpi">Up-Selling</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-name">PSM</div>
+        <div class="grid-2">
+          <div>
+            <label>Target Shift 1</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>Target Shift 2</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PWP (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>PWP</strong> (Demo)</div>
+        <span class="badge-kpi">Bundling</span>
+      </div>
+      <div class="kpi-row yellow">
+        <div class="kpi-name">PWP</div>
+        <div class="grid-2">
+          <div>
+            <label>Target Shift 1</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>Target Shift 2</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERTIS (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>SERTIS</strong> (Demo)</div>
+        <span class="badge-kpi">Sertifikasi Struk</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-name">SERTIS</div>
+        <div class="grid-2">
+          <div>
+            <label>Target Shift 1</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>Target Shift 2</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMO SUEGER (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>Promo Sueger</strong> (Demo)</div>
+        <span class="badge-kpi">Redeem</span>
+      </div>
+      <div class="kpi-row yellow">
+        <div class="kpi-name">PROMO SUEGER</div>
+        <div class="grid-2">
+          <div>
+            <label>Target % ke syarat</label>
+            <input type="number" value="20" disabled />
+          </div>
+          <div>
+            <label>Struk Bersyarat</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+          <div>
+            <label>Struk Redeem</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVOUCHER (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>Evoucher</strong> (Demo)</div>
+        <span class="badge-kpi">Digital Spending</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-name">EVOUCHER</div>
+        <div class="grid-2">
+          <div>
+            <label>Target / Shift (Rp)</label>
+            <input type="number" value="5000" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga, Rp)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+        <p class="note">
+          Nilai di atas hanyalah contoh target evoucher pada tampilan demo.
+        </p>
+      </div>
+    </div>
+
+    <!-- NEW MEMBER (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>New Member</strong> (Demo)</div>
+        <span class="badge-kpi">Akuisisi</span>
+      </div>
+      <div class="kpi-row yellow">
+        <div class="kpi-name">NEW MEMBER</div>
+        <div class="grid-2">
+          <div>
+            <label>Target Shift 1</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>Target Shift 2</label>
+            <input type="number" value="5" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELUR (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">KPI · <strong>Telur Ayam Negeri</strong> (Demo)</div>
+        <span class="badge-kpi">SKU Fokus</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-name">TELUR AYAM NEGERI</div>
+        <div class="grid-2">
+          <div>
+            <label>Target pack / shift</label>
+            <input type="number" value="1" disabled />
+          </div>
+          <div>
+            <label>ACTUAL (shift yang jaga, pack)</label>
+            <input type="number" value="0 (demo)" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT (VIEW ONLY) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><strong>Output</strong> · Laporan (Demo)</div>
+        <span class="badge-kpi">View Only</span>
+      </div>
+
+      <div class="status-bar" id="statusSummary">
+        <span class="label">Status</span> · Versi Demo — semua tombol dinonaktifkan
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-red demo-disabled" disabled>
+          <span class="icon">⚡</span>
+          <span>Generate Laporan</span>
+        </button>
+        <button type="button" class="btn-yellow demo-disabled" disabled>
+          <span class="icon">📋</span>
+          <span>Copy Laporan</span>
+        </button>
+        <button type="button" class="btn-wa demo-disabled" disabled>
+          <span class="icon">🟢</span>
+          <span>Kirim ke Grup WA</span>
+        </button>
+      </div>
+
+      <textarea id="output" readonly>
+VERSI DEMO
+
+Template ini hanya untuk tampilan contoh.
+Fitur generate laporan, copy, dan kirim WA
+hanya tersedia di versi Premium.
+      </textarea>
+      <p class="note">
+        Pada versi Premium, area ini akan berisi laporan per shift yang sudah otomatis dihitung dan siap di-copy ke WhatsApp.
+      </p>
+    </div>
+
+    <!-- MOTIVASI -->
+    <div class="card" id="section-motivasi">
+      <div class="card-header">
+        <div class="card-title"><strong>Motivasi</strong> · Versi Pendek & Ngena</div>
+        <span class="badge-kpi">Untuk Kasir</span>
+      </div>
+      <div>
+        <p class="motivation-title">Motivasi Shift</p>
+        <ul class="motivation-list">
+          <li>“Kerja Anda hari ini menentukan hasil toko besok.”</li>
+          <li>“Target bukan tekanan, tapi arah.”</li>
+          <li>“Pelayanan kecil Anda punya dampak besar.”</li>
+          <li>“Setiap shift adalah kesempatan memperbaiki.”</li>
+          <li>“Kerja hebat lahir dari konsistensi sederhana.”</li>
+          <li>“Senyum Anda adalah branding toko.”</li>
+          <li>“Yang penting bukan cepat, tapi tepat.”</li>
+          <li>“Capek itu wajar, menyerah itu tidak.”</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-main">© 2025 D&D A DIGITAL CREATIVE STUDIO — Retail Tools & Templates</div>
+      <div class="footer-sub">Crafted by Brandon Tan · Demo View Only</div>
+    </div>
+  </div>
+
+  <script>
+  // THEME TOGGLE (AKTIF DI DEMO)
+  (function initTheme() {
+    const body = document.body;
+    const toggle = document.getElementById("themeToggle");
+    const label = toggle.querySelector(".mode-label");
+
+    function applyTheme(mode) {
+      if (mode === "light") {
+        body.classList.remove("dark");
+        body.classList.add("light");
+        label.textContent = "Light Mode";
+      } else {
+        body.classList.remove("light");
+        body.classList.add("dark");
+        label.textContent = "Dark Mode";
+      }
+    }
+
+    const saved = localStorage.getItem("reportThemeDemo");
+    if (saved === "light" || saved === "dark") {
+      applyTheme(saved);
+    } else {
+      applyTheme("dark");
+    }
+
+    toggle.addEventListener("click", () => {
+      const cur = body.classList.contains("light") ? "light" : "dark";
+      const next = cur === "light" ? "dark" : "light";
+      applyTheme(next);
+      localStorage.setItem("reportThemeDemo", next);
+    });
+  })();
+
+  // SECTION NAV SCROLL (AKTIF)
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    const chips = document.querySelectorAll(".nav-chip");
+    chips.forEach(ch => ch.classList.remove("active"));
+
+    if (id === "section-panduan") {
+      chips[0]?.classList.add("active");
+    } else if (id === "section-isi-laporan") {
+      chips[1]?.classList.add("active");
+    } else if (id === "section-motivasi") {
+      chips[2]?.classList.add("active");
+    }
+  }
+  </script>
+</body>
+</html>
