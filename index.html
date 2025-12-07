@@ -2,18 +2,21 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Laporan Per Shift - KP Garung Tambak (Versi PRO + GAP)</title>
+  <title>Laporan Per Shift - KP Garung Tambak</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
+  /* ===========================
+     THEME & COLORS (ANGKASA BLUE–VIOLET)
+  ============================ */
   :root {
     --bg-main: #050718;
     --bg-card: rgba(10, 12, 32, 0.98);
     --bg-card-soft: rgba(18, 22, 52, 0.98);
     --text-main: #f8f8ff;
     --text-muted: #a6add8;
-    --neon-primary: #4f8cff;
-    --neon-secondary: #a855ff;
+    --neon-primary: #4f8cff;  /* biru lembut */
+    --neon-secondary: #a855ff; /* violet */
     --border-soft: #262b4a;
     --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -32,6 +35,9 @@
     box-sizing: border-box;
   }
 
+  /* ===========================
+     GLOBAL BACKGROUND (NO ANIM)
+  ============================ */
   body {
     margin: 0;
     padding: 16px;
@@ -72,6 +78,9 @@
     mix-blend-mode: soft-light;
   }
 
+  /* ===========================
+     HEADER
+  ============================ */
   .header {
     display: flex;
     align-items: center;
@@ -101,7 +110,7 @@
   }
 
   .logo-alfamart img.logo-img {
-    height: 30px;
+    height: 30px;            /* logo dibesarin */
     display: block;
   }
 
@@ -191,6 +200,9 @@
     z-index: 1;
   }
 
+  /* ===========================
+     SECTION NAV
+  ============================ */
   .section-nav {
     display: inline-flex;
     flex-wrap: wrap;
@@ -240,6 +252,9 @@
       0 0 12px rgba(168, 85, 255, 0.7);
   }
 
+  /* ===========================
+     CARD (NO ANIM, LIGHT SHADOW)
+  ============================ */
   .card {
     position: relative;
     background:
@@ -376,6 +391,9 @@
     color: var(--neon-primary);
   }
 
+  /* ===========================
+     BUTTONS
+  ============================ */
   .btn-row {
     display: flex;
     flex-wrap: wrap;
@@ -395,28 +413,51 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
     position: relative;
     overflow: hidden;
-    transition: transform 0.15s ease, opacity 0.15s ease;
   }
 
   button span.icon {
     font-size: 13px;
   }
 
+  button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.32),
+      transparent,
+      transparent
+    );
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  button:hover::before {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+
   button.btn-red {
     background: linear-gradient(135deg, #4f8cff, #2b5fbf);
     color: #fdfdff;
+    box-shadow: 0 0 14px rgba(79, 140, 255, 0.7);
   }
 
   button.btn-yellow {
     background: linear-gradient(135deg, #a855ff, #6d28d9);
     color: #fdfdff;
+    box-shadow: 0 0 14px rgba(168, 85, 255, 0.7);
   }
 
   button.btn-wa {
     background: linear-gradient(135deg, #00c96f, #008c48);
     color: #f5fff9;
+    box-shadow: 0 0 14px rgba(0, 201, 111, 0.75);
   }
 
   button:hover {
@@ -426,8 +467,13 @@
 
   button:active {
     transform: translateY(1px);
+    box-shadow: none;
     opacity: 0.9;
   }
+
+  /* ===========================
+     TEXTAREA OUTPUT
+  ============================ */
 
   textarea {
     width: 100%;
@@ -476,15 +522,19 @@
     margin-left: 4px;
   }
 
-  .pill-status.ok {
+  .pill-status.lunas {
     border-color: rgba(56, 189, 148, 0.7);
     color: #6ee7b7;
   }
 
-  .pill-status.bad {
+  .pill-status.hutang {
     border-color: rgba(239, 68, 68, 0.7);
     color: #fecaca;
   }
+
+  /* ===========================
+     FOOTER + MOTIVASI
+  ============================ */
 
   .footer {
     margin-top: 22px;
@@ -585,7 +635,7 @@
         <p style="font-size:12px; margin:0 0 6px 0; font-weight:600;">Versi sopan & jelas untuk kasir</p>
         <ol style="margin:0 0 8px 16px; padding:0; font-size:12px; color:var(--text-main);">
           <li>Isi <strong>Tanggal, Nama Kasir, AC, dan Shift</strong>.</li>
-          <li>Isi <strong>Hutang Kemarin</strong> dan <strong>ACTUAL</strong> pada setiap KPI sesuai pencapaian shift Anda.</li>
+          <li>Isi <strong>ACTUAL &amp; Hutang Kemarin</strong> pada setiap KPI sesuai pencapaian shift Anda.</li>
           <li>Klik <strong>Generate Laporan</strong>.</li>
           <li>Periksa hasil laporan di kotak bawah.</li>
           <li>Klik <strong>Copy Laporan</strong>.</li>
@@ -593,8 +643,8 @@
           <li>Jika ada kesalahan angka, ubah input → klik <strong>Generate</strong> kembali.</li>
         </ol>
         <p class="note">
-          <strong>Total Target = Target Hari Ini + Hutang Kemarin</strong>.  
-          GAP, status (Lebih/Kurang/Tercapai), dan ACV% dihitung otomatis.
+          <strong>Total Target, GAP, dan ACV%</strong> otomatis terisi. Target harian tidak perlu diubah.
+          Hanya isi data umum, Hutang Kemarin, dan ACTUAL untuk shift yang sedang Anda jalankan.
         </p>
       </div>
     </div>
@@ -632,7 +682,8 @@
         </div>
       </div>
       <p class="note">
-        Target KPI di bawah <strong>fix</strong>. Kasir cukup isi <strong>Hutang Kemarin</strong> dan <strong>ACTUAL</strong> untuk shift yang sedang dijalankan.
+        Target KPI di bawah <strong>fix</strong>. Kasir cukup isi data umum, <strong>Hutang Kemarin</strong>, dan <strong>ACTUAL</strong>.
+        Total Target, GAP, dan ACV% dihitung otomatis per shift.
       </p>
     </div>
 
@@ -723,7 +774,7 @@
       </div>
     </div>
 
-    <!-- PROMO SUEGER (tanpa hutang, tetap ACV struk) -->
+    <!-- PROMO SUEGER -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">KPI · <strong>Promo Sueger</strong></div>
@@ -738,16 +789,13 @@
           </div>
           <div>
             <label>Struk Bersyarat</label>
-            <input type="number" id="suegerBersyarat" placeholder="Struk memenuhi syarat" />
+            <input type="number" id="suegerBersyarat" placeholder="Struk memenuhi syarat (shift ini / total)" />
           </div>
           <div>
             <label>Struk Redeem</label>
             <input type="number" id="suegerRedeem" placeholder="Struk redeem" />
           </div>
         </div>
-        <p class="note">
-          ACV Sueger = (Struk Redeem / Struk Bersyarat) × 100%. Tidak pakai hutang.
-        </p>
       </div>
     </div>
 
@@ -813,7 +861,8 @@
       </div>
 
       <div class="status-bar" id="statusSummary">
-        <span class="label">Status KPI</span> · Belum digenerate
+        <span class="label">Status KPI</span> ·
+        <span>Belum digenerate</span>
       </div>
 
       <div class="btn-row">
@@ -924,7 +973,7 @@
     return parts[2] + "-" + parts[1] + "-" + parts[0]; // dd-mm-yyyy
   }
 
-  // KPI dengan hutang: PSM, PWP, SERTIS, NM
+  // HITUNG KPI DENGAN HUTANG KEMARIN
   function hitungKpiWithDebt(target1, target2, hutangPrev, actual, shift) {
     const t1 = Number(target1) || 0;
     const t2 = Number(target2) || 0;
@@ -960,9 +1009,9 @@
     };
   }
 
-  // KPI single target per shift: TELUR
-  function hitungSingleKpiWithDebt(targetPerShift, hutangPrev, actual) {
-    const baseTarget = Number(targetPerShift) || 0;
+  // TELUR: TARGET PER SHIFT + HUTANG KEMARIN
+  function hitungTelurWithDebt(targetShift, hutangPrev, actual) {
+    const baseTarget = Number(targetShift) || 0;
     const hut = Number(hutangPrev) || 0;
     const act = Number(actual) || 0;
 
@@ -1044,7 +1093,7 @@
     );
 
     // TELUR
-    const telur = hitungSingleKpiWithDebt(
+    const telur = hitungTelurWithDebt(
       document.getElementById("telurTargetShift").value,
       document.getElementById("telurHutangPrev").value,
       document.getElementById("telurActual").value
@@ -1070,7 +1119,7 @@ AC         : ${ac}
 SHIFT      : ${shift}
 
 *PSM*
-TARGET SHIFT : ${psm.baseTarget}
+TARGET SHIFT   : ${psm.baseTarget}
 HUTANG KEMARIN : ${psm.hutangPrev}
 TOTAL TARGET   : ${psm.totalTarget}
 ACTUAL         : ${psm.act}
@@ -1078,7 +1127,7 @@ ${formatGapLine(psm)}
 ACV            : ${psm.acvRounded}%
 
 *PWP*
-TARGET SHIFT : ${pwp.baseTarget}
+TARGET SHIFT   : ${pwp.baseTarget}
 HUTANG KEMARIN : ${pwp.hutangPrev}
 TOTAL TARGET   : ${pwp.totalTarget}
 ACTUAL         : ${pwp.act}
@@ -1086,7 +1135,7 @@ ${formatGapLine(pwp)}
 ACV            : ${pwp.acvRounded}%
 
 *SERTIS*
-TARGET SHIFT : ${sertis.baseTarget}
+TARGET SHIFT   : ${sertis.baseTarget}
 HUTANG KEMARIN : ${sertis.hutangPrev}
 TOTAL TARGET   : ${sertis.totalTarget}
 ACTUAL         : ${sertis.act}
@@ -1100,7 +1149,7 @@ STRUK REDEEM    : ${suegerRedeem}
 ACV%            : ${suegerAcvRounded}%
 
 *NEW MEMBER*
-TARGET SHIFT : ${nm.baseTarget}
+TARGET SHIFT   : ${nm.baseTarget}
 HUTANG KEMARIN : ${nm.hutangPrev}
 TOTAL TARGET   : ${nm.totalTarget}
 ACTUAL         : ${nm.act}
@@ -1108,7 +1157,7 @@ ${formatGapLine(nm)}
 ACV%           : ${nm.acvRounded}%
 
 *TELUR AYAM NEGERI*
-TARGET SHIFT : ${telur.baseTarget} PACK
+TARGET SHIFT   : ${telur.baseTarget} PACK
 HUTANG KEMARIN : ${telur.hutangPrev}
 TOTAL TARGET   : ${telur.totalTarget}
 ACTUAL         : ${telur.act}
@@ -1119,25 +1168,26 @@ ACV%           : ${telur.acvRounded}%`;
 
     // STATUS BAR
     const statusSummary = document.getElementById("statusSummary");
+    const statusPieces = [];
+
     function pill(text, ok) {
-      const cls = ok ? "pill-status ok" : "pill-status bad";
+      const cls = ok ? "pill-status lunas" : "pill-status hutang";
       return `<span class="${cls}">${text}</span>`;
     }
 
-    const parts = [];
-    parts.push('<span class="label">Status KPI</span> · ');
-    parts.push('PSM ');
-    parts.push(pill(formatGapShort(psm), psm.gap >= 0));
-    parts.push(' · PWP ');
-    parts.push(pill(formatGapShort(pwp), pwp.gap >= 0));
-    parts.push(' · SERTIS ');
-    parts.push(pill(formatGapShort(sertis), sertis.gap >= 0));
-    parts.push(' · NM ');
-    parts.push(pill(formatGapShort(nm), nm.gap >= 0));
-    parts.push(' · TELUR ');
-    parts.push(pill(formatGapShort(telur), telur.gap >= 0));
+    statusPieces.push('<span class="label">Status KPI</span> · ');
+    statusPieces.push("PSM ");
+    statusPieces.push(pill(formatGapShort(psm), psm.gap >= 0));
+    statusPieces.push(" · PWP ");
+    statusPieces.push(pill(formatGapShort(pwp), pwp.gap >= 0));
+    statusPieces.push(" · SERTIS ");
+    statusPieces.push(pill(formatGapShort(sertis), sertis.gap >= 0));
+    statusPieces.push(" · NM ");
+    statusPieces.push(pill(formatGapShort(nm), nm.gap >= 0));
+    statusPieces.push(" · TELUR ");
+    statusPieces.push(pill(formatGapShort(telur), telur.gap >= 0));
 
-    statusSummary.innerHTML = parts.join("");
+    statusSummary.innerHTML = statusPieces.join("");
   }
 
   async function copyLaporan() {
